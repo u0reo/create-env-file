@@ -17,6 +17,9 @@ inputs:
   replace_regexp:
     required: false
     description: 'Convert a comma-separated regexp to another string (ex: "STG_=,ALL_=EXT_,=ADD_")'
+  regexp_flags:
+    required: false
+    description: 'Set flags for regular expressions (default: g(global)i(ignore-case))'
 runs:
   using: 'node16'
   main: 'dist/index.js'

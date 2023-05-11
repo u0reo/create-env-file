@@ -12,6 +12,7 @@ export default async function run(): Promise<void> {
     const includeRegexpStr = core.getInput('include_regexp');
     const excludeRegexpStr = core.getInput('exclude_regexp');
     const replaceRegexpStr = core.getInput('replace_regexp');
+    const regexpFlags = core.getInput('regexp_flags') || 'gi';
 
     let secrets: Record<string, string>;
     try {
@@ -46,7 +47,9 @@ export default async function run(): Promise<void> {
     if (includeList.length > 0) {
       secrets = Object.fromEntries(
         Object.entries(secrets).filter(([key]) =>
-          includeList.some(pattern => key.match(new RegExp(pattern))),
+          includeList.some(pattern =>
+            key.match(new RegExp(pattern, regexpFlags)),
+          ),
         ),
       );
     }
@@ -55,7 +58,10 @@ export default async function run(): Promise<void> {
     core.debug(`Using exclude list: ${excludeList.join(', ')}`);
     secrets = Object.fromEntries(
       Object.entries(secrets).filter(
-        ([key]) => !excludeList.some(pattern => key.match(new RegExp(pattern))),
+        ([key]) =>
+          !excludeList.some(pattern =>
+            key.match(new RegExp(pattern, regexpFlags)),
+          ),
       ),
     );
     core.debug(`Current keys of secrets: ${Object.keys(secrets).join(', ')}`);
@@ -69,7 +75,7 @@ export default async function run(): Promise<void> {
       for (const [search, replace] of replaceObject) {
         secrets = Object.fromEntries(
           Object.entries(secrets).map(([k, v]) => [
-            k.replace(new RegExp(search), replace),
+            k.replace(new RegExp(search, regexpFlags), replace),
             v,
           ]),
         );
