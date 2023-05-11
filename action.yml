@@ -1,0 +1,22 @@
+name: 'Generate .env from github.secrets'
+description: 'Create environment variable files from secrets'
+author: 'u0reo'
+inputs:
+  secrets:
+    required: true
+    description: 'JSON formatted secrets (toJSON(secrets))'
+  path:
+    required: true
+    description: 'The path of the environment variable file'
+  include_regexp:
+    required: false
+    description: 'Use keys with regexp specified as comma-separated'
+  exclude_regexp:
+    required: false
+    description: 'Ignore keys with regexp specified as comma-separated'
+  replace_regexp:
+    required: false
+    description: 'Convert a comma-separated regexp to another string (ex: "STG_=,ALL_=EXT_,=ADD_")'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
